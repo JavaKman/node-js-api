@@ -25,8 +25,8 @@ jobs:
         run: echo '${{ toJSON(job.services) }}'
       - name: Post a User
         run: |
-          curl -X POST http://localhost:3001/api/users `
-          -H "Content-Type: application/json" `
-          -d "{\"username\":\"hello\",\"address\":\"xoxo\"}"
+          curl -X POST http://localhost:3001/api/users \
+          -H "Content-Type: application/json" \
+          -d '{"username":"hello","address":"xoxo"}'
       - name: Get Users
         run: curl http://localhost:3001/api/users
