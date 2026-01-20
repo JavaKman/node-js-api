@@ -1,0 +1,37 @@
+#---------------------------------------------------------
+#
+# https://hub.docker.com/r/alialaa17/node-api/tags
+# alialaa17/simple-node-api
+#---------------------------------------------------------
+name: Multiple Services in Container
+on: [push, workflow_dispatch]
+
+jobs:
+  test-api:
+    runs-on: ubuntu-latest
+    container: ubuntu:20.04
+    services: # service containers
+      app:
+        image: alialaa17/simple-node-api
+        ports:
+          - 3001:3000
+        env:
+          MONGO_HOSTNAME: mongo
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+    steps: # steps are running directly on the runner machine, not container
+      - name: Install curl
+        run: |
+          apt-get -y update
+          apt-get -y install curl
+      - name: Dump Services Context
+        run: echo '${{ toJSON(job.services) }}'
+      - name: Post a User
+        run: |
+          curl -X POST http://localhost:3001/api/users \
+          -H "Content-Type: application/json" \
+          -d '{"username":"hello","address":"xoxo"}'
+      - name: Get Users
+        run: curl http://localhost:3001/api/users
